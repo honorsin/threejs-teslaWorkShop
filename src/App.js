@@ -1,7 +1,18 @@
-import { useMemo, useRef } from "react";
-import { Canvas, extend, useFrame, useThree } from "@react-three/fiber";
+import { Suspense, useMemo, useRef } from "react";
+import {
+  Canvas,
+  extend,
+  useFrame,
+  useThree,
+  useLoader,
+} from "@react-three/fiber";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { BufferAttribute, DoubleSide } from "three";
+import {
+  BufferAttribute,
+  DoubleSide,
+  TextureLoader,
+  WebGLCubeRenderTarget,
+} from "three";
 
 extend({ OrbitControls });
 
@@ -12,18 +23,27 @@ const Orbit = () => {
 
 const Box = (props) => {
   const ref = useRef();
-
+  const texture = useLoader(TextureLoader, "/wood.jpg");
   useFrame(() => {
-    ref.current.rotation.x += 0.01;
     ref.current.rotation.y += 0.01;
   });
 
   return (
-    <mesh ref={ref} {...props} castShadow receiveShadow>
-      <boxBufferGeometry />
-      <meshBasicMaterial color="blue" />
+    <mesh ref={ref} {...props} castShadow>
+      <sphereBufferGeometry args={[1, 100, 100]}/>
+      <meshPhysicalMaterial map={texture} />
     </mesh>
   );
+};
+
+const Background = (props) => {
+  const texture = useLoader(TextureLoader, "/autoshop.jpg");
+  const {gl} = useThree();
+  const formatted = new WebGLCubeRenderTarget(
+    texture.image.height
+  ).fromEquirectangularTexture(gl, texture);
+
+  return <primitive attach="background" object={texture} />;
 };
 
 const Floor = (props) => {
@@ -39,7 +59,7 @@ const Bulb = (props) => {
   return (
     <mesh {...props}>
       <pointLight castShadow />
-      <sphereBufferGeometry args={[0.2, 20, 20]}/>
+      <sphereBufferGeometry args={[0.2, 20, 20]} />
       <meshPhongMaterial emissive="yellow" />
     </mesh>
   );
@@ -64,12 +84,18 @@ const App = () => {
         camera={{ position: [3, 3, 3] }}
         shadows
       >
+
         <Orbit />
         <ambientLight intensity={0.2} />
 
-        <Bulb position={[0,3,0]}/>
+        <Bulb position={[0, 3, 0]} />
         <axesHelper args={[5]} />
-        <Box position={[-1, 1, 2]} />
+        <Suspense fallback={null}>
+          <Box position={[0, 1.5, 0]} />
+        </Suspense>
+        <Suspense fallback={null}>
+          <Background />
+        </Suspense>
         <Floor position={[0, -0.5, 0]} />
       </Canvas>
     </div>
