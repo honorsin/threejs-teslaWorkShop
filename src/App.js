@@ -14,11 +14,11 @@ import {
 } from "three";
 
 
-import Orbit from './Orbit'
-import Bulb from './Bulb'
-import Floor from './Floor'
-import Background from './Background'
-
+import Orbit from './components/Orbit'
+import Bulb from './components/Bulb'
+import Floor from './components/Floor'
+import Background from './components/Background'
+import ColorPicker from './components/ColorPicker'
 
 const Box = (props) => {
   const ref = useRef();
@@ -75,23 +75,11 @@ const App = () => {
     []
   );
 
-  const handleClick = e => {
-    if (!window.activeMesh) return
-    console.log(e)
-
-    window.activeMesh.material.color = new Color(e.target.style.backgroundColor)
-  }
+ 
 
   return (
     <div style={{ height: "100vh", width: "100vw" }} >
-      <div style={{position: 'absolute', zIndex: 1}} >
-        <div style={{backgroundColor: 'blue', height: 50, width: 50}} onClick={handleClick}>
-        </div>
-        <div style={{backgroundColor: 'red', height: 50, width: 50}} onClick={handleClick}>
-        </div>
-        <div style={{backgroundColor: 'black', height: 50, width: 50}} onClick={handleClick}>
-        </div>
-      </div>
+      <ColorPicker />
       <Canvas
         style={{ background: "black" }}
         camera={{ position: [7, 7, 7] }}
