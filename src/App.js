@@ -1,4 +1,4 @@
-import { useMemo, Suspense} from "react";
+import { useMemo, Suspense } from "react";
 import {
   Canvas,
   extend,
@@ -6,23 +6,16 @@ import {
   useThree,
   useLoader,
 } from "@react-three/fiber";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import {
-  BufferAttribute,
-  TextureLoader,
-  Color
-} from "three";
+import { BufferAttribute, TextureLoader, Color } from "three";
 
-import Box from './Box'
+import Box from "./Box";
 
-import Orbit from './components/Orbit'
-import Bulb from './components/Bulb'
-import Floor from './components/Floor'
-import Background from './components/Background'
-import ColorPicker from './components/ColorPicker'
-
-
-
+import Orbit from "./components/Orbit";
+import Bulb from "./components/Bulb";
+import Floor from "./components/Floor";
+import Background from "./components/Background";
+import ColorPicker from "./components/ColorPicker";
+import Draggable from "./components/Draggable";
 
 const App = () => {
   const vertices = useMemo(
@@ -36,10 +29,8 @@ const App = () => {
     []
   );
 
- 
-
   return (
-    <div style={{ height: "100vh", width: "100vw" }} >
+    <div style={{ height: "100vh", width: "100vw" }}>
       <ColorPicker />
       <Canvas
         style={{ background: "black" }}
@@ -51,12 +42,16 @@ const App = () => {
 
         <Bulb position={[0, 3, 0]} />
         <axesHelper args={[5]} />
-        <Suspense fallback={null}>
-          <Box position={[-4, 1, 0]} />
-        </Suspense>
-        <Suspense fallback={null}>
-          <Box position={[4, 1, 0]} />
-        </Suspense>
+        <Draggable>
+          <Suspense fallback={null}>
+            <Box position={[-4, 1, 0]} />
+          </Suspense>
+        </Draggable>
+        <Draggable>
+          <Suspense fallback={null}>
+            <Box position={[4, 1, 0]} />
+          </Suspense>
+        </Draggable>
         <Suspense fallback={null}>
           <Background />
         </Suspense>
