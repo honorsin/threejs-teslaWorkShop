@@ -9,18 +9,16 @@ import {
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import {
   BufferAttribute,
-  DoubleSide,
   TextureLoader,
-  WebGLCubeRenderTarget,
   Color
 } from "three";
 
-extend({ OrbitControls });
 
-const Orbit = () => {
-  const { camera, gl } = useThree();
-  return <orbitControls args={[camera, gl.domElement]} />;
-};
+import Orbit from './Orbit'
+import Bulb from './Bulb'
+import Floor from './Floor'
+import Background from './Background'
+
 
 const Box = (props) => {
   const ref = useRef();
@@ -63,34 +61,7 @@ const Box = (props) => {
   );
 };
 
-const Background = (props) => {
-  const texture = useLoader(TextureLoader, "/autoshop.jpg");
-  const { gl } = useThree();
-  const formatted = new WebGLCubeRenderTarget(
-    texture.image.height
-  ).fromEquirectangularTexture(gl, texture);
 
-  return <primitive attach="background" object={texture} />;
-};
-
-const Floor = (props) => {
-  return (
-    <mesh {...props} receiveShadow>
-      <boxBufferGeometry args={[20, 1, 10]} />
-      <meshPhysicalMaterial />
-    </mesh>
-  );
-};
-
-const Bulb = (props) => {
-  return (
-    <mesh {...props}>
-      <pointLight castShadow />
-      <sphereBufferGeometry args={[0.2, 20, 20]} />
-      <meshPhongMaterial emissive="yellow" />
-    </mesh>
-  );
-};
 
 const App = () => {
   const vertices = useMemo(
