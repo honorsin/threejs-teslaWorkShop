@@ -1,45 +1,45 @@
-import { Suspense, useRef } from "react";
-import { useFrame, useLoader } from "@react-three/fiber";
+import { Suspense } from 'react'
+import { TextureLoader } from 'three'
+import { useLoader } from '@react-three/fiber'
+import { useBox } from '@react-three/cannon'
 
-import { TextureLoader } from "three";
-export default function Box (props) {
-  const ref = useRef();
-  const texture = useLoader(TextureLoader, "/wood.jpg");
-  useFrame(() => {
-    ref.current.rotation.x += 0.01;
-    ref.current.rotation.y += 0.01;
-  });
+export default function Box(props) {
+  const [ref, api] = useBox(() => ({ mass: 1, ...props }))
+  const texture = useLoader(TextureLoader, '/wood.jpg')
 
-  const scaleUp = (mesh) => mesh.scale.set(1.5, 1.5, 1.5);
+  const transparentize = (mesh) => (mesh.material.opacity = 0.5)
 
-  const scaleDown = (mesh) => mesh.scale.set(1, 1, 1);
+  const opacify = (mesh) => (mesh.material.opacity = 1)
 
   const handlePointerDown = (e) => {
     if (window.activeMesh) {
-      window.activeMesh.active = false;
-      scaleDown(window.activeMesh);
+      window.activeMesh.active = false
+      opacify(window.activeMesh)
     }
 
-    e.object.active = true;
-    scaleUp(e.object);
-    window.activeMesh = e.object;
-  };
+    e.object.active = true
+    transparentize(e.object)
+    window.activeMesh = e.object
+  }
 
-  const handlePointerEnter = (e) => e.object.active || scaleUp(e.object);
+  const handlePointerEnter = (e) => e.object.active || transparentize(e.object)
 
-  const handlePointerLeave = (e) => e.object.active || scaleDown(e.object);
+  const handlePointerLeave = (e) => e.object.active || opacify(e.object)
 
   return (
-    <mesh
-      ref={ref}
-      {...props}
-      castShadow
-      onPointerDown={handlePointerDown}
-      onPointerEnter={handlePointerEnter}
-      onPointerLeave={handlePointerLeave}
-    >
-      <boxBufferGeometry args={[1, 1, 1]} />
-      <meshPhysicalMaterial map={texture} />
-    </mesh>
-  );
-};
+    <Suspense fallback={null}>
+      <mesh
+        castShadow
+        {...props}
+        ref={ref}
+        api={api}
+        onPointerDown={handlePointerDown}
+        onPointerEnter={handlePointerEnter}
+        onPointerLeave={handlePointerLeave}
+      >
+        <boxBufferGeometry args={[1, 1, 1]} />
+        <meshPhysicalMaterial map={texture} transparent />
+      </mesh>
+    </Suspense>
+  )
+}

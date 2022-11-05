@@ -4,7 +4,7 @@ import { extend, useThree } from '@react-three/fiber'
 
 extend({ DragControls })
 
-export default function Draggable({ children }) {
+export default function Draggable({ transformGroup, children }) {
   const groupRef = useRef()
   const controlsRef = useRef()
   const { camera, gl, scene } = useThree()
@@ -17,22 +17,39 @@ export default function Draggable({ children }) {
   useEffect(() => {
     const controlsElement = controlsRef.current
 
-    const enableOrbit = () => (scene.orbitControls.enabled = true)
+    const onDrag = (e) => {
+      e.object.api?.position.copy(e.object.position)
+      e.object.api?.velocity.set(0, 0, 0)
+    }
 
-    const disableOrbit = () => (scene.orbitControls.enabled = false)
+    const onDragStart = (e) => {
+      scene.orbitControls.enabled = false
+      e.object.api?.mass.set(0)
+    }
 
-    controlsElement.addEventListener('hoveron', disableOrbit)
-    controlsElement.addEventListener('hoveroff', enableOrbit)
+    const onDragEnd = (e) => {
+      scene.orbitControls.enabled = true
+      e.object.api?.mass.set(1)
+    }
+
+    controlsElement.addEventListener('drag', onDrag)
+    controlsElement.addEventListener('dragstart', onDragStart)
+    controlsElement.addEventListener('dragend', onDragEnd)
 
     return () => {
-      controlsElement.removeEventListener('hoveron', disableOrbit)
-      controlsElement.removeEventListener('hoveroff', enableOrbit)
+      controlsElement.removeEventListener('drag', onDrag)
+      controlsElement.removeEventListener('dragstart', onDragStart)
+      controlsElement.removeEventListener('dragend', onDragEnd)
     }
   }, [meshes, controlsRef, scene.orbitControls])
 
   return (
     <group ref={groupRef}>
-      <dragControls args={[meshes, camera, gl.domElement]} ref={controlsRef} />
+      <dragControls
+        args={[meshes, camera, gl.domElement]}
+        transformGroup={transformGroup}
+        ref={controlsRef}
+      />
       {children}
     </group>
   )
