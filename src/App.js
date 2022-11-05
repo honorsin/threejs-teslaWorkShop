@@ -7,6 +7,7 @@ import Bulb from './components/Bulb'
 import Background from './components/Background'
 import Draggable from './components/Draggable'
 import Floor from './components/Floor'
+import Model from './components/Model'
 import Box from './Box'
 
 const App = () => {
@@ -27,8 +28,16 @@ const App = () => {
           <Floor position={[0, -0.5, 0]} />
           <Draggable>
             <Bulb position={[0, 3, 0]} />
-            <Box position={[-4, 1, 0]} />
-            <Box position={[4, 1, 0]} />
+            <Model
+              path="/tesla_model_3/scene.gltf"
+              position={[4, 0.6, 0]}
+              scale={[0.01, 0.01, 0.01]}
+            />
+            <Model
+              path="/tesla_model_S/scene.gltf"
+              position={[-4, 0.6, 0]}
+              scale={[0.8, 0.8, 0.8]}
+            />
           </Draggable>
         </Physics>
       </Canvas>
