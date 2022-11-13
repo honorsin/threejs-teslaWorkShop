@@ -6,8 +6,8 @@ export default function Floor(props) {
 
   return (
     <mesh receiveShadow {...props} ref={ref}>
-      <boxBufferGeometry args={args} />
-      <meshPhysicalMaterial />
+      <boxBufferGeometry args={[200, 1, 200]} />
+      <meshPhysicalMaterial transparent opacity={0.2}/>
     </mesh>
   )
 }

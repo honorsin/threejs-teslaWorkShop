@@ -27,6 +27,14 @@ const App = () => {
         <Orbit />
         <axesHelper args={[3]} />
         <ambientLight intensity={0.2} />
+        <directionalLight
+          position={[6, 3, 0]}
+          intensity={2}
+          castShadow
+          shadow-mapSize-height={1024}
+          shadow-mapSize-width={1024}
+          shadow-radius={10}
+        />
         {/* <fog attach="fog" args={['white', 1, 10]} /> */}
         <Background />
         <Physics>
