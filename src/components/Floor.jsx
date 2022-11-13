@@ -1,13 +1,12 @@
-import { useBox } from '@react-three/cannon'
+import { forwardRef } from 'react'
 
-export default function Floor(props) {
-  const args = [20, 1, 10]
-  const [ref] = useBox(() => ({ args, ...props }))
-
-  return (
-    <mesh receiveShadow {...props} ref={ref}>
-      <boxBufferGeometry args={[200, 1, 200]} />
-      <meshPhysicalMaterial transparent opacity={0.2}/>
-    </mesh>
-  )
-}
+export default forwardRef(
+  ({ geometryArgs = [20, 1, 10], opacity = 1, ...props }, ref) => {
+    return (
+      <mesh receiveShadow {...props} ref={ref}>
+        <boxBufferGeometry args={geometryArgs} />
+        <meshPhysicalMaterial transparent opacity={opacity} />
+      </mesh>
+    )
+  }
+)

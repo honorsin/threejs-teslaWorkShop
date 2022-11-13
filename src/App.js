@@ -13,6 +13,8 @@ import Cars from './components/Cars'
 import CameraControls from './components/CameraControls'
 import CameraButtons from './components/CameraButtons'
 import Box from './Box'
+import Lights from './components/Lights'
+import PhysicalFloor  from './components/PhysicalFloor'
 const App = () => {
   return (
     <div style={{ height: '100vh', width: '100vw' }}>
@@ -26,30 +28,18 @@ const App = () => {
         <CameraControls />
         <Orbit />
         <axesHelper args={[3]} />
-        <ambientLight intensity={0.2} />
-        <directionalLight
-          position={[6, 3, 0]}
-          intensity={2}
-          castShadow
-          shadow-mapSize-height={1024}
-          shadow-mapSize-width={1024}
-          shadow-radius={10}
-        />
+        <Lights />
         {/* <fog attach="fog" args={['white', 1, 10]} /> */}
         <Background />
         <Physics>
-          <Floor position={[0, -0.5, 0]} />
-          <Draggable>
-            <Bulb position={[-6, 3, 0]} />
-            <Bulb position={[0, 3, 0]} />
-            <Bulb position={[6, 3, 0]} />
-          </Draggable>
+          <PhysicalFloor position={[0, -0.5, 0]} />
           <Cars />
         </Physics>
       </Canvas>
     </div>
   )
 }
+
 
 
 export default App

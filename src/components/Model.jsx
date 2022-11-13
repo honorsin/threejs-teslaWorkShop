@@ -1,15 +1,23 @@
+import { AnimationMixer, FrontSide } from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
-import { useLoader } from '@react-three/fiber'
-import * as THREE  from 'three'
+import { useFrame, useLoader } from '@react-three/fiber'
 
 export default function Model({ path, ...props }) {
   const model = useLoader(GLTFLoader, path)
+  let mixer
 
-  model.scene.traverse(child => {
+  if (model.animations.length) {
+    mixer = new AnimationMixer(model.scene)
+    model.animations.forEach((clip) => mixer.clipAction(clip).play())
+  }
+
+  useFrame((_, delta) => mixer?.update(delta))
+
+  model.scene.traverse((child) => {
     if (child.isMesh) {
-        child.caseShadow = true;
-        child.receiveShadow = true;
-        child.material.side = THREE.FrontSide
+      child.castShadow = true
+      child.receiveShadow = true
+      child.material.side = FrontSide
     }
   })
   return <primitive {...props} object={model.scene} />

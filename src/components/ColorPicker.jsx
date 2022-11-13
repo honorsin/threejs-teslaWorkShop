@@ -1,36 +1,40 @@
-import { Color } from "three";
+import { Color } from 'three'
+import state from '../state'
 
 export default function ColorPicker() {
-  const handleClick = e => {
-    if (!window.activeMesh) return
-    window.activeMesh.material.color = new Color(e.target.style.backgroundColor)
+  const handleClick = (e) => {
+    if (!state.activeMesh) {
+      return
+    }
+
+    state.activeMesh.material.color = new Color(e.target.style.backgroundColor)
   }
 
   return (
     <div
       style={{
-        display: "flex",
+        display: 'flex',
         left: 0,
-        margin: "auto",
-        position: "absolute",
+        margin: 'auto',
+        position: 'absolute',
         right: 0,
-        top: "20px",
-        width: "fit-content",
-        zIndex: 1,
+        top: '20px',
+        width: 'fit-content',
+        zIndex: 1
       }}
     >
       <div
-        style={{ backgroundColor: "blue", height: 50, width: 50 }}
+        style={{ backgroundColor: 'blue', height: '50px', width: '50px' }}
         onClick={handleClick}
-      ></div>
+      />
       <div
-        style={{ backgroundColor: "red", height: 50, width: 50 }}
+        style={{ backgroundColor: 'red', height: '50px', width: '50px' }}
         onClick={handleClick}
-      ></div>
+      />
       <div
-        style={{ backgroundColor: "black", height: 50, width: 50 }}
+        style={{ backgroundColor: 'white', height: '50px', width: '50px' }}
         onClick={handleClick}
-      ></div>
+      />
     </div>
-  );
+  )
 }
